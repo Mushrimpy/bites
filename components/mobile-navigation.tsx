@@ -27,7 +27,7 @@ export function MobileNavigation() {
     ]
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background">
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background backdrop-blur-lg bg-opacity-80">
             <nav className="flex h-16">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href
@@ -38,7 +38,7 @@ export function MobileNavigation() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex flex-1 flex-col items-center justify-center gap-1",
+                                "flex flex-1 flex-col items-center justify-center gap-1 transition-colors",
                                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                             )}
                         >

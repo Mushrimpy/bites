@@ -1,8 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Calendar, Mail, ExternalLink, ArrowUpDown } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Search, Calendar, Mail, ExternalLink, ArrowUpDown, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -24,7 +23,6 @@ const newsItems = [
         client: "John Smith",
         company: "Acme Corporation",
         date: "2 hours ago",
-        sentiment: "positive",
         summary: "Acme Corporation exceeded analyst expectations with a 15% increase in quarterly revenue."
     },
     {
@@ -33,7 +31,6 @@ const newsItems = [
         client: "Sarah Johnson",
         company: "Globex International",
         date: "5 hours ago",
-        sentiment: "neutral",
         summary: "Sarah Johnson will step down as CEO of Globex International at the end of the quarter."
     },
     {
@@ -42,7 +39,6 @@ const newsItems = [
         client: "Michael Brown",
         company: "Initech",
         date: "Yesterday",
-        sentiment: "negative",
         summary: "Regulators have opened an investigation into Initech's accounting practices."
     },
     {
@@ -51,7 +47,6 @@ const newsItems = [
         client: "Jennifer Lee",
         company: "Wayne Enterprises",
         date: "Yesterday",
-        sentiment: "positive",
         summary: "The new technology could reduce carbon emissions by up to 40% in industrial applications."
     },
     {
@@ -60,7 +55,6 @@ const newsItems = [
         client: "Emily Davis",
         company: "Soylent Corp",
         date: "2 days ago",
-        sentiment: "positive",
         summary: "New partnerships in Japan and South Korea will increase global market share."
     },
     {
@@ -69,7 +63,6 @@ const newsItems = [
         client: "David Miller",
         company: "Stark Industries",
         date: "3 days ago",
-        sentiment: "positive",
         summary: "The $2.3B contract will fund development of next-generation security systems."
     },
     {
@@ -78,14 +71,13 @@ const newsItems = [
         client: "Robert Wilson",
         company: "Umbrella Corporation",
         date: "1 week ago",
-        sentiment: "negative",
         summary: "Analysts at Goldman Sachs downgraded Umbrella Corporation stock from 'Buy' to 'Hold'."
     }
 ]
 
 export function NewsFeed() {
     const [searchTerm, setSearchTerm] = useState("")
-    const [sortColumn, setSortColumn] = useState<string | null>(null)
+    const [sortColumn, setSortColumn] = useState<string | null>("date")
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
     const [selectedNews, setSelectedNews] = useState<typeof newsItems[0] | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)
@@ -158,18 +150,18 @@ export function NewsFeed() {
             </div>
 
             {sortedNews.length > 0 ? (
-                <div className="rounded-md border">
+                <div className="rounded-lg overflow-hidden border shadow-sm">
                     <Table>
                         <TableHeader>
-                            <TableRow>
+                            <TableRow className="bg-muted/40">
                                 <TableHead
-                                    className="cursor-pointer"
+                                    className="cursor-pointer w-[45%]"
                                     onClick={() => handleSort("headline")}
                                 >
                                     <div className="flex items-center">
                                         Headline
                                         {sortColumn === "headline" && (
-                                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
                                         )}
                                     </div>
                                 </TableHead>
@@ -180,7 +172,7 @@ export function NewsFeed() {
                                     <div className="flex items-center">
                                         Client
                                         {sortColumn === "client" && (
-                                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
                                         )}
                                     </div>
                                 </TableHead>
@@ -191,30 +183,29 @@ export function NewsFeed() {
                                     <div className="flex items-center">
                                         Company
                                         {sortColumn === "company" && (
-                                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
                                         )}
                                     </div>
                                 </TableHead>
-                                <TableHead>Sentiment</TableHead>
                                 <TableHead
-                                    className="cursor-pointer"
+                                    className="cursor-pointer text-right"
                                     onClick={() => handleSort("date")}
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center justify-end">
                                         Date
                                         {sortColumn === "date" && (
-                                            <ArrowUpDown className="ml-2 h-4 w-4" />
+                                            <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
                                         )}
                                     </div>
                                 </TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead className="w-[120px]">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {sortedNews.map((item) => (
                                 <TableRow
                                     key={item.id}
-                                    className="group cursor-pointer"
+                                    className="group cursor-pointer hover:bg-muted/30"
                                     onClick={() => handleRowClick(item)}
                                 >
                                     <TableCell>
@@ -225,29 +216,21 @@ export function NewsFeed() {
                                     </TableCell>
                                     <TableCell>{item.client}</TableCell>
                                     <TableCell>{item.company}</TableCell>
-                                    <TableCell>
-                                        <Badge
-                                            variant={
-                                                item.sentiment === "positive"
-                                                    ? "success"
-                                                    : item.sentiment === "negative"
-                                                        ? "destructive"
-                                                        : "outline"
-                                            }
-                                        >
-                                            {item.sentiment.charAt(0).toUpperCase() + item.sentiment.slice(1)}
-                                        </Badge>
+                                    <TableCell className="text-right">
+                                        <div className="flex items-center justify-end text-muted-foreground text-sm">
+                                            <Clock className="h-3.5 w-3.5 mr-1.5" />
+                                            {item.date}
+                                        </div>
                                     </TableCell>
-                                    <TableCell>{item.date}</TableCell>
                                     <TableCell onClick={(e) => e.stopPropagation()}>
-                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Button variant="ghost" size="icon" title="Schedule Meeting">
+                                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <Button variant="ghost" size="icon" title="Schedule Meeting" className="h-8 w-8">
                                                 <Calendar className="h-4 w-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" title="Send Email">
+                                            <Button variant="ghost" size="icon" title="Send Email" className="h-8 w-8">
                                                 <Mail className="h-4 w-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" title="View Full Article">
+                                            <Button variant="ghost" size="icon" title="View Full Article" className="h-8 w-8">
                                                 <ExternalLink className="h-4 w-4" />
                                             </Button>
                                         </div>
