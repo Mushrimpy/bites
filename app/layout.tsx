@@ -12,8 +12,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Investment Banking CRM</title>
-        <meta name="description" content="A CRM application for investment bankers" />
+        <title>Bites | Investment Banking CRM</title>
+        <meta name="description" content="Client news that matters for investment bankers" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <div className="flex min-h-screen flex-col bg-background">
